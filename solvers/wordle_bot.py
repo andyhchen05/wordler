@@ -77,6 +77,8 @@ class WordleBot:
         in the remaining possible answers.
 
         A repeated letter in one word is only counted once.
+        This rewards guessing letters that are likely to be
+        SOMEWHERE in the answer (yellow/green potential).
         """
 
         frequencies = {}
@@ -95,10 +97,46 @@ class WordleBot:
         return frequencies
 
 
-    def score_word(self, word, frequencies):
+    def get_position_frequencies(self):
         """
-        Give a word a score based on the frequency
-        of its letters among possible answers.
+        For each of the 5 positions, count how often each
+        letter appears in that position among the remaining
+        possible answers. This rewards guessing letters that
+        are likely to be correct in that EXACT spot (green
+        potential), which plain letter frequency can't see.
+        """
+
+        position_frequencies = [{} for _ in range(5)]
+
+        for word in self.possible_answers:
+
+            for position, letter in enumerate(word):
+
+                counts = position_frequencies[position]
+
+                if letter not in counts:
+                    counts[letter] = 0
+
+                counts[letter] += 1
+
+        return position_frequencies
+
+
+    def score_word(self, word, frequencies, position_frequencies):
+        """
+        Give a word a score based on:
+          - how often its (unique) letters appear anywhere
+            among the possible answers, plus
+          - how often each of its letters appears in that
+            exact position among the possible answers.
+
+        The two signals are complementary: letter frequency
+        rewards words that are likely to turn up yellow/green
+        information about presence; position frequency rewards
+        words likely to land greens, which is what lets the bot
+        tell apart words that share the same letters (e.g.
+        catch/match/patch/watch) instead of guessing blind
+        among them.
         """
 
         score = 0
@@ -111,16 +149,21 @@ class WordleBot:
 
                 score += frequencies[letter]
 
+        for position, letter in enumerate(word):
+
+            score += position_frequencies[position].get(letter, 0)
+
         return score
 
 
     def choose_guess(self):
         """
-        Choose the highest-scoring possible answer
-        using letter frequency.
+        Choose the highest-scoring possible answer using
+        letter frequency combined with positional frequency.
         """
 
         frequencies = self.get_letter_frequencies()
+        position_frequencies = self.get_position_frequencies()
 
         best_word = None
         best_score = -1
@@ -129,7 +172,8 @@ class WordleBot:
 
             score = self.score_word(
                 word,
-                frequencies
+                frequencies,
+                position_frequencies
             )
 
             if score > best_score:
