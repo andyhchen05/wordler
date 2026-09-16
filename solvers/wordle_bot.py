@@ -158,15 +158,29 @@ class WordleBot:
 
     def choose_guess(self):
         """
-        Choose the highest-scoring possible answer using
-        letter frequency combined with positional frequency.
+        Choose a guess using letter frequency combined with
+        positional frequency. If more than one possible answer
+        ties for the best score (this is what happens with
+        near-identical words like catch/hatch/watch, where
+        frequency and position alone can't tell them apart),
+        break the tie by picking whichever tied word would
+        split the remaining possible answers into the most
+        distinct feedback patterns -- i.e. whichever guess is
+        most likely to narrow things down the most, regardless
+        of which one turns out to be the actual answer.
         """
+
+        if not self.possible_answers:
+            return None
+
+        if len(self.possible_answers) == 1:
+            return self.possible_answers[0]
 
         frequencies = self.get_letter_frequencies()
         position_frequencies = self.get_position_frequencies()
 
-        best_word = None
         best_score = -1
+        best_words = []
 
         for word in self.possible_answers:
 
@@ -179,9 +193,73 @@ class WordleBot:
             if score > best_score:
 
                 best_score = score
-                best_word = word
+                best_words = [word]
+
+            elif score == best_score:
+
+                best_words.append(word)
+
+        if len(best_words) == 1:
+            return best_words[0]
+
+        return self.choose_splitting_guess(best_words)
+
+
+    def choose_splitting_guess(self, candidates):
+        """
+        Among a small set of tied candidates, pick whichever
+        one would split the current possible answers into the
+        most distinct feedback patterns. If none of the tied
+        possible answers can fully separate the remaining
+        candidates (e.g. catch/hatch/watch, which all look
+        identical against each other), fall back to searching
+        every legal guess for a better splitter -- including
+        words that can't be the answer themselves, purely to
+        gather information.
+        """
+
+        best_word, best_buckets = self._best_splitter(candidates)
+
+        if best_buckets >= len(self.possible_answers):
+            # Already perfectly distinguishes every remaining
+            # possible answer -- nothing to gain by looking at
+            # words that can't even be the answer.
+            return best_word
+
+        guess_word, guess_buckets = self._best_splitter(self.guesses)
+
+        if guess_buckets > best_buckets:
+            return guess_word
 
         return best_word
+
+
+    def _best_splitter(self, pool):
+        """
+        Search a pool of candidate guesses and return whichever
+        one produces the most distinct feedback patterns against
+        the current possible answers, along with that count.
+        """
+
+        best_word = None
+        best_bucket_count = -1
+
+        for word in pool:
+
+            patterns = set()
+
+            for answer in self.possible_answers:
+
+                patterns.add(
+                    self.get_feedback_pattern(word, answer)
+                )
+
+            if len(patterns) > best_bucket_count:
+
+                best_bucket_count = len(patterns)
+                best_word = word
+
+        return best_word, best_bucket_count
 
 
     def get_feedback_pattern(self, guess, answer):
