@@ -158,16 +158,27 @@ class WordleBot:
 
     def choose_guess(self):
         """
-        Choose a guess using letter frequency combined with
-        positional frequency. If more than one possible answer
-        ties for the best score (this is what happens with
-        near-identical words like catch/hatch/watch, where
-        frequency and position alone can't tell them apart),
-        break the tie by picking whichever tied word would
-        split the remaining possible answers into the most
-        distinct feedback patterns -- i.e. whichever guess is
-        most likely to narrow things down the most, regardless
-        of which one turns out to be the actual answer.
+        Choose a guess for the current turn.
+
+        Turns 2+: score every possible answer by letter +
+        positional frequency, take the strongest scorers as a
+        shortlist, then pick whichever shortlisted word actually
+        narrows the field the most -- measured as the expected
+        number of candidates left after seeing its feedback
+        (lower is better), not just raw frequency score. Raw
+        frequency alone can pick a guess that "sounds right" but
+        splits a family of remaining answers unevenly (e.g. only
+        trimming 25 candidates down to 15), which is what was
+        stranding some games with 2-3 indistinguishable answers
+        by turn 6. Checking split quality on every turn, not just
+        on exact score ties, catches that earlier.
+
+        If nothing in the shortlist fully separates the remaining
+        answers, and the pool is still small enough to afford it,
+        also search every legal guess (including words that can't
+        be the answer) for a genuinely better splitter -- the same
+        idea as the old tie-break fallback, just no longer gated
+        behind an exact tie.
         """
 
         if not self.possible_answers:
@@ -182,8 +193,7 @@ class WordleBot:
         frequencies = self.get_letter_frequencies()
         position_frequencies = self.get_position_frequencies()
 
-        best_score = -1
-        best_words = []
+        scored = []
 
         for word in self.possible_answers:
 
@@ -193,41 +203,28 @@ class WordleBot:
                 position_frequencies
             )
 
-            if score > best_score:
+            scored.append((score, word))
 
-                best_score = score
-                best_words = [word]
+        scored.sort(key=lambda pair: pair[0], reverse=True)
 
-            elif score == best_score:
+        shortlist_size = min(25, len(scored))
+        shortlist = [word for _, word in scored[:shortlist_size]]
 
-                best_words.append(word)
-
-        if len(best_words) == 1:
-            return best_words[0]
-
-        return self.choose_splitting_guess(best_words)
-
-
-    def choose_splitting_guess(self, candidates):
-        """
-        Among a small set of tied candidates, pick whichever
-        one would split the remaining possible answers into the
-        most distinct feedback patterns.
-        """
-
-        best_word, best_buckets = self._best_splitter(candidates)
-
-        if best_buckets >= len(self.possible_answers):
-
-            return best_word
-
-        guess_word, guess_buckets = self._best_splitter(
-            self.guesses
+        best_word, best_sum_sq, best_buckets = self._best_splitter(
+            shortlist
         )
 
-        if guess_buckets > best_buckets:
+        perfect_split = best_buckets >= len(self.possible_answers)
 
-            return guess_word
+        if not perfect_split and len(self.possible_answers) <= 60:
+
+            guess_word, guess_sum_sq, guess_buckets = self._best_splitter(
+                self.guesses
+            )
+
+            if guess_sum_sq < best_sum_sq:
+
+                return guess_word
 
         return best_word
 
@@ -235,32 +232,50 @@ class WordleBot:
     def _best_splitter(self, pool):
         """
         Search a pool of candidate guesses and return whichever
-        one produces the most distinct feedback patterns against
-        the current possible answers.
+        one leaves the fewest expected remaining candidates once
+        its feedback is known, along with that expected count and
+        the number of distinct feedback patterns it produces.
+
+        "Expected remaining candidates" is the sum, over every
+        possible feedback pattern the guess could produce, of
+        (how many answers would give that pattern)^2, divided by
+        the total -- a guess that splits the field evenly scores
+        much lower here than one that produces a few big buckets
+        and several tiny ones, even if both produce the same
+        number of distinct patterns.
         """
 
         best_word = None
-        best_bucket_count = -1
+        best_sum_sq = None
+        best_buckets = -1
+
+        total = len(self.possible_answers)
 
         for word in pool:
 
-            patterns = set()
+            counts = {}
 
             for answer in self.possible_answers:
 
-                patterns.add(
-                    self.get_feedback_pattern(
-                        word,
-                        answer
-                    )
-                )
+                pattern = self.get_feedback_pattern(word, answer)
 
-            if len(patterns) > best_bucket_count:
+                if pattern not in counts:
+                    counts[pattern] = 0
 
-                best_bucket_count = len(patterns)
+                counts[pattern] += 1
+
+            sum_sq = 0
+
+            for count in counts.values():
+                sum_sq += count * count
+
+            if best_sum_sq is None or sum_sq < best_sum_sq:
+
+                best_sum_sq = sum_sq
+                best_buckets = len(counts)
                 best_word = word
 
-        return best_word, best_bucket_count
+        return best_word, best_sum_sq, best_buckets
 
 
     def get_feedback_pattern(self, guess, answer):
