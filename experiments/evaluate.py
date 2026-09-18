@@ -1,4 +1,5 @@
 import sys
+import time
 
 sys.path.append("../wordle")
 sys.path.append("../solvers")
@@ -57,6 +58,8 @@ def evaluate_strategy(answers, strategy):
 
     total = len(answers)
 
+    start_time = time.time()
+
     for index, answer in enumerate(answers):
 
         guesses, won = play_game(answer, strategy)
@@ -69,13 +72,24 @@ def evaluate_strategy(answers, strategy):
 
         # Show progress every 100 games
         if (index + 1) % 100 == 0:
+
+            elapsed = time.time() - start_time
+
             print(
                 strategy,
                 ":",
                 index + 1,
                 "/",
-                total
+                total,
+                "| Time:",
+                round(elapsed, 1),
+                "seconds"
             )
+
+    elapsed = time.time() - start_time
+
+    print()
+    print("Total evaluation time:", round(elapsed, 2), "seconds")
 
     return results
 
@@ -102,9 +116,11 @@ def summarize_results(results):
     for result in results:
 
         if result["won"]:
+
             wins += 1
 
             total_guesses += result["guesses"]
+
             guess_distribution[result["guesses"]] += 1
 
     win_rate = wins / total_games
@@ -155,16 +171,3 @@ if __name__ == "__main__":
     )
 
     summarize_results(frequency_results)
-
-    # Test entropy strategy
-    print()
-    print("================================")
-    print("ENTROPY STRATEGY")
-    print("================================")
-
-    entropy_results = evaluate_strategy(
-        answers,
-        "entropy"
-    )
-
-    summarize_results(entropy_results)
