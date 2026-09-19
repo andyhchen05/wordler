@@ -43,16 +43,7 @@ class WordleBot:
 
         self.feedback_cache = {}
 
-        # Best opener found by an offline search of every legal word
-        # (answers + guesses) against the full answer pool, scored by
-        # expected remaining candidates after the guess. It doesn't
-        # win outright on that metric (roate splits turn 1 slightly
-        # better), but "saner" is itself a possible answer and full
-        # game simulations showed no real difference between the two
-        # (3.7561 vs 3.7575 average guesses) -- so hardcoding it
-        # skips recomputing the same turn-1 scoring pass every game
-        # without giving up anything.
-        self.opening_guess = "saner"
+        self.opening_guess = "salet"
         self.turns_used = 0
 
 

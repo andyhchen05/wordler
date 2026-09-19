@@ -5,7 +5,7 @@ sys.path.append("../wordle")
 sys.path.append("../solvers")
 
 from wordle import Wordle
-from wordle_bot import WordleBot
+from wordler_v1 import WordleBot
 
 
 def play_game(answer, strategy):
