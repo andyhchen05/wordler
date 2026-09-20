@@ -20,7 +20,9 @@
 # The solver can use a legal guess that is NOT currently a possible
 # answer if that guess gives better information.
 
+import json
 import math
+import os
 import sys
 
 # Allow us to import wordle.py
@@ -82,10 +84,43 @@ class WordleEntropyBot:
         # search entirely instead of recomputing it from scratch.
         if not hasattr(WordleEntropyBot, "_stats_cache"):
             WordleEntropyBot._stats_cache = {}
+
+        # Precomputed best turn-2 guesses, loaded once and shared
+        # across every instance. See precompute_turn2.py -- it
+        # picks each turn-2 state's guess by actually simulating
+        # full games (real average guesses to finish), not just
+        # by entropy, which is a good but imperfect proxy for
+        # that. Falls back to the live entropy search if the
+        # table hasn't been generated yet, so the bot still works
+        # without it.
+        if not hasattr(WordleEntropyBot, "_turn2_lookahead"):
+            WordleEntropyBot._turn2_lookahead = self._load_turn2_lookahead()
+
+        # The exact feedback pattern the opener produced, recorded
+        # by update() -- this is what identifies which turn-2
+        # state we're in, for the lookahead table lookup.
+        self.turn1_pattern = None
+
+    @staticmethod
+    def _load_turn2_lookahead(path="turn2_lookahead.json"):
+
+        if not os.path.exists(path):
+            return {}
+
+        try:
+            with open(path, "r") as f:
+                data = json.load(f)
+            return data.get("states", {})
+        except (OSError, ValueError):
+            return {}
+
     def update(self, guess, feedback):
         """
         Remove answers that are inconsistent with the feedback.
         """
+
+        if self.turns_used == 0:
+            self.turn1_pattern = tuple(feedback)
 
         remaining_answers = []
 
@@ -191,9 +226,15 @@ class WordleEntropyBot:
         Later turns: search every legal guess (self.guesses
         already includes every possible answer too, so this
         always considers real answers as well as pure probes).
-        Turn 2 specifically is cached across every bot instance
-        (there are at most 243 distinct turn-2 states no matter
-        what, since the opener is fixed) -- see get_guess_stats.
+        Turn 2 specifically first checks a precomputed lookahead
+        table (see precompute_turn2.py) that picks each turn-2
+        state's guess by real game simulation rather than just
+        entropy -- entropy is a good proxy for how well a guess
+        splits the field, but doesn't account for how easy the
+        RESULTING buckets are to finish off, which is what
+        actually determines total guesses. Falls back to the
+        live entropy search (still cached across instances) if
+        the table doesn't have an entry for this exact state.
 
         Tie-breaking:
             1. Higher entropy
@@ -211,6 +252,15 @@ class WordleEntropyBot:
 
         if self.turns_used == 0:
             return self.opening_guess
+
+        if self.turns_used == 1 and self.turn1_pattern is not None:
+
+            key = ",".join(str(value) for value in self.turn1_pattern)
+
+            entry = WordleEntropyBot._turn2_lookahead.get(key)
+
+            if entry is not None:
+                return entry["guess"]
 
         pool_key = frozenset(self.possible_answers) if self.turns_used == 1 else None
 

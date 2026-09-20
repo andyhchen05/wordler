@@ -1,0 +1,631 @@
+{
+  "opener": "salet",
+  "shortlist_size": 10,
+  "states": {
+    "0,1,0,0,0": {
+      "guess": "corny",
+      "avg_guesses": 3.6644,
+      "pool_size": 146
+    },
+    "1,1,0,1,0": {
+      "guess": "arise",
+      "avg_guesses": 3.2,
+      "pool_size": 15
+    },
+    "1,1,0,0,0": {
+      "guess": "arbah",
+      "avg_guesses": 3.2609,
+      "pool_size": 23
+    },
+    "0,1,0,1,1": {
+      "guess": "grate",
+      "avg_guesses": 3.44,
+      "pool_size": 25
+    },
+    "0,1,0,2,0": {
+      "guess": "mudir",
+      "avg_guesses": 3.1111,
+      "pool_size": 18
+    },
+    "0,1,0,0,2": {
+      "guess": "crudo",
+      "avg_guesses": 3.3077,
+      "pool_size": 26
+    },
+    "0,1,0,1,0": {
+      "guess": "beard",
+      "avg_guesses": 3.6875,
+      "pool_size": 96
+    },
+    "0,1,2,2,0": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "0,1,1,0,0": {
+      "guess": "corni",
+      "avg_guesses": 3.6914,
+      "pool_size": 81
+    },
+    "0,1,0,2,1": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "0,1,0,0,1": {
+      "guess": "train",
+      "avg_guesses": 3.2667,
+      "pool_size": 30
+    },
+    "0,1,1,1,0": {
+      "guess": "grame",
+      "avg_guesses": 3.7321,
+      "pool_size": 56
+    },
+    "0,1,0,1,2": {
+      "guess": "recap",
+      "avg_guesses": 3.2,
+      "pool_size": 15
+    },
+    "0,1,1,0,2": {
+      "guess": "fungo",
+      "avg_guesses": 3.0,
+      "pool_size": 7
+    },
+    "0,1,2,0,0": {
+      "guess": "polly",
+      "avg_guesses": 3.1429,
+      "pool_size": 14
+    },
+    "1,1,1,1,0": {
+      "guess": "zebec",
+      "avg_guesses": 3.0,
+      "pool_size": 4
+    },
+    "0,1,1,2,0": {
+      "guess": "zygon",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "0,1,1,1,2": {
+      "guess": "reply",
+      "avg_guesses": 3.125,
+      "pool_size": 8
+    },
+    "1,1,1,0,0": {
+      "guess": "chaps",
+      "avg_guesses": 3.1,
+      "pool_size": 10
+    },
+    "0,1,1,0,1": {
+      "guess": "potai",
+      "avg_guesses": 3.0714,
+      "pool_size": 14
+    },
+    "1,1,0,0,2": {
+      "guess": "coarb",
+      "avg_guesses": 3.0,
+      "pool_size": 7
+    },
+    "1,1,0,0,1": {
+      "guess": "zinky",
+      "avg_guesses": 3.0,
+      "pool_size": 6
+    },
+    "1,1,0,2,0": {
+      "guess": "dhikr",
+      "avg_guesses": 3.0,
+      "pool_size": 6
+    },
+    "0,2,1,2,0": {
+      "guess": "gnarl",
+      "avg_guesses": 3.6316,
+      "pool_size": 19
+    },
+    "0,2,0,0,0": {
+      "guess": "mincy",
+      "avg_guesses": 3.7586,
+      "pool_size": 116
+    },
+    "0,2,0,1,0": {
+      "guess": "corgi",
+      "avg_guesses": 3.3913,
+      "pool_size": 23
+    },
+    "0,2,1,0,0": {
+      "guess": "bingy",
+      "avg_guesses": 3.3333,
+      "pool_size": 21
+    },
+    "0,2,0,2,0": {
+      "guess": "rownd",
+      "avg_guesses": 4.2381,
+      "pool_size": 84
+    },
+    "0,2,2,0,0": {
+      "guess": "dormy",
+      "avg_guesses": 3.0,
+      "pool_size": 10
+    },
+    "0,2,2,2,0": {
+      "guess": "zebra",
+      "avg_guesses": 3.0,
+      "pool_size": 4
+    },
+    "1,2,2,0,0": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "1,2,1,0,0": {
+      "guess": "zonal",
+      "avg_guesses": 3.0,
+      "pool_size": 4
+    },
+    "1,2,0,2,0": {
+      "guess": "zebec",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "1,2,0,0,0": {
+      "guess": "morin",
+      "avg_guesses": 3.0909,
+      "pool_size": 11
+    },
+    "1,2,0,1,1": {
+      "guess": "cohab",
+      "avg_guesses": 3.5,
+      "pool_size": 6
+    },
+    "0,2,0,0,1": {
+      "guess": "corby",
+      "avg_guesses": 3.6389,
+      "pool_size": 36
+    },
+    "0,2,0,2,1": {
+      "guess": "retem",
+      "avg_guesses": 3.7391,
+      "pool_size": 23
+    },
+    "0,2,0,1,1": {
+      "guess": "yucch",
+      "avg_guesses": 3.0,
+      "pool_size": 6
+    },
+    "1,1,0,1,2": {
+      "guess": "yufts",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "0,0,0,1,0": {
+      "guess": "drone",
+      "avg_guesses": 3.8113,
+      "pool_size": 212
+    },
+    "0,0,0,1,2": {
+      "guess": "preif",
+      "avg_guesses": 3.3448,
+      "pool_size": 29
+    },
+    "0,0,0,2,2": {
+      "guess": "virgo",
+      "avg_guesses": 3.2353,
+      "pool_size": 17
+    },
+    "0,1,2,1,0": {
+      "guess": "yrivd",
+      "avg_guesses": 3.0,
+      "pool_size": 5
+    },
+    "0,0,2,1,0": {
+      "guess": "coble",
+      "avg_guesses": 3.2,
+      "pool_size": 15
+    },
+    "0,0,0,1,1": {
+      "guess": "thrip",
+      "avg_guesses": 3.5286,
+      "pool_size": 70
+    },
+    "0,0,1,1,0": {
+      "guess": "boule",
+      "avg_guesses": 3.5873,
+      "pool_size": 63
+    },
+    "1,0,0,2,2": {
+      "guess": "yourn",
+      "avg_guesses": 3.0,
+      "pool_size": 6
+    },
+    "1,0,0,1,2": {
+      "guess": "weigh",
+      "avg_guesses": 3.1111,
+      "pool_size": 9
+    },
+    "0,0,1,2,1": {
+      "guess": "timbo",
+      "avg_guesses": 3.0,
+      "pool_size": 7
+    },
+    "0,0,1,2,0": {
+      "guess": "livor",
+      "avg_guesses": 3.6719,
+      "pool_size": 64
+    },
+    "0,0,0,2,0": {
+      "guess": "drown",
+      "avg_guesses": 4.1261,
+      "pool_size": 238
+    },
+    "0,0,0,0,0": {
+      "guess": "crony",
+      "avg_guesses": 3.9111,
+      "pool_size": 315
+    },
+    "0,0,0,0,2": {
+      "guess": "groin",
+      "avg_guesses": 3.3095,
+      "pool_size": 42
+    },
+    "0,0,2,0,0": {
+      "guess": "mochi",
+      "avg_guesses": 3.6842,
+      "pool_size": 38
+    },
+    "0,0,0,0,1": {
+      "guess": "north",
+      "avg_guesses": 3.625,
+      "pool_size": 104
+    },
+    "1,0,0,0,0": {
+      "guess": "hoick",
+      "avg_guesses": 3.5082,
+      "pool_size": 61
+    },
+    "0,0,0,2,1": {
+      "guess": "turon",
+      "avg_guesses": 3.5926,
+      "pool_size": 54
+    },
+    "1,0,0,0,1": {
+      "guess": "gumbo",
+      "avg_guesses": 3.3125,
+      "pool_size": 16
+    },
+    "1,0,1,1,0": {
+      "guess": "zobus",
+      "avg_guesses": 3.0,
+      "pool_size": 7
+    },
+    "0,0,1,0,0": {
+      "guess": "courd",
+      "avg_guesses": 3.6949,
+      "pool_size": 118
+    },
+    "1,0,1,0,0": {
+      "guess": "profs",
+      "avg_guesses": 3.0,
+      "pool_size": 10
+    },
+    "0,0,1,0,1": {
+      "guess": "roily",
+      "avg_guesses": 3.0769,
+      "pool_size": 13
+    },
+    "0,0,1,0,2": {
+      "guess": "clung",
+      "avg_guesses": 3.0714,
+      "pool_size": 14
+    },
+    "1,0,2,0,0": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "1,0,0,0,2": {
+      "guess": "boric",
+      "avg_guesses": 3.375,
+      "pool_size": 24
+    },
+    "1,0,0,2,0": {
+      "guess": "demon",
+      "avg_guesses": 3.2353,
+      "pool_size": 17
+    },
+    "0,2,1,1,0": {
+      "guess": "gable",
+      "avg_guesses": 3.1111,
+      "pool_size": 9
+    },
+    "0,2,0,2,2": {
+      "guess": "zurfs",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "0,2,2,1,0": {
+      "guess": "yucch",
+      "avg_guesses": 3.0,
+      "pool_size": 4
+    },
+    "0,2,0,0,2": {
+      "guess": "touch",
+      "avg_guesses": 3.3889,
+      "pool_size": 18
+    },
+    "1,2,0,1,0": {
+      "guess": "uprun",
+      "avg_guesses": 3.0,
+      "pool_size": 7
+    },
+    "0,0,2,2,0": {
+      "guess": "impro",
+      "avg_guesses": 3.2727,
+      "pool_size": 22
+    },
+    "1,0,0,1,0": {
+      "guess": "rhone",
+      "avg_guesses": 3.5102,
+      "pool_size": 49
+    },
+    "0,0,1,1,2": {
+      "guess": "wrick",
+      "avg_guesses": 3.0,
+      "pool_size": 6
+    },
+    "1,2,1,2,0": {
+      "guess": "zygal",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "0,1,1,1,1": {
+      "guess": "upful",
+      "avg_guesses": 3.0,
+      "pool_size": 5
+    },
+    "0,0,1,1,1": {
+      "guess": "laith",
+      "avg_guesses": 3.0909,
+      "pool_size": 11
+    },
+    "1,0,0,1,1": {
+      "guess": "throe",
+      "avg_guesses": 3.0909,
+      "pool_size": 11
+    },
+    "0,2,1,0,1": {
+      "guess": "zincy",
+      "avg_guesses": 3.0,
+      "pool_size": 4
+    },
+    "0,2,1,0,2": {
+      "guess": "zurfs",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "0,0,2,2,2": {
+      "guess": "zygon",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "0,0,2,0,1": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "1,2,0,0,1": {
+      "guess": "thana",
+      "avg_guesses": 3.1667,
+      "pool_size": 6
+    },
+    "0,2,1,2,1": {
+      "guess": "zurfs",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "0,2,1,1,1": {
+      "guess": "whilk",
+      "avg_guesses": 3.0,
+      "pool_size": 4
+    },
+    "1,0,1,0,1": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "0,2,2,0,1": {
+      "guess": "ymolt",
+      "avg_guesses": 3.0,
+      "pool_size": 5
+    },
+    "0,0,2,1,1": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "0,0,2,0,2": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "0,0,2,1,2": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "2,2,0,2,0": {
+      "guess": "nervy",
+      "avg_guesses": 3.1429,
+      "pool_size": 7
+    },
+    "2,2,0,1,0": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "2,2,0,0,0": {
+      "guess": "yupon",
+      "avg_guesses": 3.3,
+      "pool_size": 10
+    },
+    "2,2,2,0,0": {
+      "guess": "zonda",
+      "avg_guesses": 3.0,
+      "pool_size": 5
+    },
+    "2,2,0,0,1": {
+      "guess": "zygal",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "2,1,1,0,0": {
+      "guess": "chill",
+      "avg_guesses": 3.3077,
+      "pool_size": 13
+    },
+    "2,1,1,1,0": {
+      "guess": "wrick",
+      "avg_guesses": 3.0,
+      "pool_size": 4
+    },
+    "2,1,0,0,0": {
+      "guess": "cramp",
+      "avg_guesses": 3.4651,
+      "pool_size": 43
+    },
+    "2,1,0,0,2": {
+      "guess": "urman",
+      "avg_guesses": 3.0,
+      "pool_size": 5
+    },
+    "2,1,0,1,0": {
+      "guess": "pharm",
+      "avg_guesses": 3.375,
+      "pool_size": 24
+    },
+    "2,0,0,1,0": {
+      "guess": "prink",
+      "avg_guesses": 3.4286,
+      "pool_size": 42
+    },
+    "2,0,0,1,2": {
+      "guess": "uncap",
+      "avg_guesses": 3.0,
+      "pool_size": 4
+    },
+    "2,0,0,0,0": {
+      "guess": "unrip",
+      "avg_guesses": 3.5286,
+      "pool_size": 70
+    },
+    "2,0,1,0,0": {
+      "guess": "whilk",
+      "avg_guesses": 3.3846,
+      "pool_size": 26
+    },
+    "2,0,0,0,2": {
+      "guess": "rohun",
+      "avg_guesses": 3.1905,
+      "pool_size": 21
+    },
+    "2,0,0,2,0": {
+      "guess": "hewer",
+      "avg_guesses": 3.4062,
+      "pool_size": 32
+    },
+    "2,0,0,1,1": {
+      "guess": "morne",
+      "avg_guesses": 3.1667,
+      "pool_size": 12
+    },
+    "2,1,1,0,2": {
+      "guess": "zygon",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "2,0,0,2,2": {
+      "guess": "yakow",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "2,0,1,1,0": {
+      "guess": "flimp",
+      "avg_guesses": 3.1818,
+      "pool_size": 11
+    },
+    "2,0,2,2,0": {
+      "guess": "zygon",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "2,0,2,0,0": {
+      "guess": "zouks",
+      "avg_guesses": 3.0,
+      "pool_size": 5
+    },
+    "2,1,0,0,1": {
+      "guess": "rypin",
+      "avg_guesses": 3.4444,
+      "pool_size": 18
+    },
+    "2,0,0,2,1": {
+      "guess": "wired",
+      "avg_guesses": 3.0,
+      "pool_size": 6
+    },
+    "2,0,0,0,1": {
+      "guess": "rouky",
+      "avg_guesses": 3.4,
+      "pool_size": 30
+    },
+    "2,1,0,1,1": {
+      "guess": "gryke",
+      "avg_guesses": 3.3,
+      "pool_size": 10
+    },
+    "2,1,1,1,1": {
+      "guess": "zolle",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "2,0,1,2,0": {
+      "guess": "zippy",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "2,0,1,1,2": {
+      "guess": "zuppa",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "2,0,1,0,1": {
+      "guess": "zygon",
+      "avg_guesses": 3.0,
+      "pool_size": 3
+    },
+    "2,1,2,0,0": {
+      "guess": "zymic",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "2,0,1,0,2": {
+      "guess": "zuppa",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "2,1,1,0,1": {
+      "guess": "zygal",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    },
+    "2,0,1,1,1": {
+      "guess": "yowie",
+      "avg_guesses": 3.0,
+      "pool_size": 4
+    },
+    "1,2,0,2,1": {
+      "guess": "zurfs",
+      "avg_guesses": 3.0,
+      "pool_size": 2
+    }
+  }
+}
