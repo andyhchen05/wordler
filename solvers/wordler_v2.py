@@ -71,6 +71,17 @@ class WordleEntropyBot:
 
         self.opening_guess = "salet"
 
+        # Shared across every WordleEntropyBot instance, not just
+        # this one. evaluate_word() creates a fresh bot per answer,
+        # but the opener is fixed, so there are at most 243 distinct
+        # turn-2 states (one per feedback pattern from the opener) --
+        # and with 3209 answers, each state recurs roughly 13 times
+        # on average. Caching by the pool itself (not by individual
+        # guess/answer pairs) means the second, third, ... occurrence
+        # of the same state across DIFFERENT games can skip the
+        # search entirely instead of recomputing it from scratch.
+        if not hasattr(WordleEntropyBot, "_stats_cache"):
+            WordleEntropyBot._stats_cache = {}
     def update(self, guess, feedback):
         """
         Remove answers that are inconsistent with the feedback.
@@ -99,26 +110,41 @@ class WordleEntropyBot:
 
         return self.possible_answers
 
-    def get_guess_stats(self, guess):
+    def get_guess_stats(self, guess, pool_key):
         """
         Compute both the entropy and the expected number of
         remaining candidates for a guess in a single pass over
         the possible answers, instead of two separate sweeps.
+
+        pool_key identifies the current possible_answers state
+        (see choose_guess). Only turn 2 passes a real pool_key --
+        with a fixed opener there are at most 243 distinct turn-2
+        states shared across all 3209 games, so caching those
+        specifically gives most of the reuse benefit while keeping
+        the cache small. Later turns have far more varied, less
+        reused states, so they pass pool_key=None and skip caching
+        entirely rather than growing the cache for little payoff.
 
         Entropy:
             H = -sum(p * log2(p)) where p = bucket_size / total
 
         Expected remaining:
             E[remaining] = sum(bucket_size^2) / total
-
-        Both numbers come from the same bucket counts, so there's
-        no reason to compute them separately.
         """
+
+        use_cache = pool_key is not None
+        cache_key = (guess, pool_key)
+
+        if use_cache and cache_key in WordleEntropyBot._stats_cache:
+            return WordleEntropyBot._stats_cache[cache_key]
 
         total = len(self.possible_answers)
 
         if total <= 1:
-            return 0.0, 0.0
+            result = (0.0, 0.0)
+            if use_cache:
+                WordleEntropyBot._stats_cache[cache_key] = result
+            return result
 
         counts = {}
 
@@ -147,7 +173,12 @@ class WordleEntropyBot:
 
         expected_remaining = sum_squared / total
 
-        return entropy, expected_remaining
+        result = (entropy, expected_remaining)
+
+        if use_cache:
+            WordleEntropyBot._stats_cache[cache_key] = result
+
+        return result
 
     def choose_guess(self):
         """
@@ -157,22 +188,12 @@ class WordleEntropyBot:
         self.opening_guess) since the full answer pool is
         identical at the start of every game.
 
-        Later turns:
-            Always search every legal guess. A small remaining
-            pool is not the same as a splittable one: a family
-            like batch/catch/hatch/latch/match/patch/watch all
-            look identical to each other no matter which one you
-            guess (guessing "batch" only ever says "yes" or "not
-            batch" -- every other member gives the same "not
-            batch" answer). The only way to actually separate
-            them is a probe word from OUTSIDE the family, which
-            means self.guesses has to stay in play even once the
-            pool is small -- restricting the search to just the
-            tied candidates at that point guarantees some of them
-            are unreachable before turns run out. Searching all
-            of self.guesses against a small pool is cheap (tens
-            of thousands of comparisons, not millions), so there's
-            no real cost to leaving it on.
+        Later turns: search every legal guess (self.guesses
+        already includes every possible answer too, so this
+        always considers real answers as well as pure probes).
+        Turn 2 specifically is cached across every bot instance
+        (there are at most 243 distinct turn-2 states no matter
+        what, since the opener is fixed) -- see get_guess_stats.
 
         Tie-breaking:
             1. Higher entropy
@@ -191,46 +212,74 @@ class WordleEntropyBot:
         if self.turns_used == 0:
             return self.opening_guess
 
-        candidate_guesses = self.guesses
+        pool_key = frozenset(self.possible_answers) if self.turns_used == 1 else None
 
-        best_word = None
-        best_entropy = -1.0
-        best_expected_remaining = float("inf")
-        best_is_answer = False
+        best = self._scan(self.guesses, pool_key)
+
+        return best[0]
+
+    def _scan(self, pool, pool_key):
+        """
+        Search a pool of candidate guesses and return whichever
+        one wins under the tie-break rules, as
+        (word, entropy, expected_remaining, is_answer).
+        """
 
         possible_set = set(self.possible_answers)
 
-        for word in candidate_guesses:
+        best = None
 
-            entropy, expected_remaining = self.get_guess_stats(word)
+        for word in pool:
 
-            if entropy > best_entropy + 1e-12:
+            entropy, expected_remaining = self.get_guess_stats(
+                word,
+                pool_key
+            )
 
-                best_word = word
-                best_entropy = entropy
-                best_expected_remaining = expected_remaining
-                best_is_answer = word in possible_set
+            candidate = (
+                word,
+                entropy,
+                expected_remaining,
+                word in possible_set
+            )
 
-            elif abs(entropy - best_entropy) <= 1e-12:
+            if best is None:
+                best = candidate
+            else:
+                best = self._better(best, candidate)
 
-                is_answer = word in possible_set
+        return best
 
-                if expected_remaining < best_expected_remaining - 1e-12:
+    def _better(self, a, b):
+        """
+        Given two (word, entropy, expected_remaining, is_answer)
+        tuples, return whichever wins under the same tie-break
+        rules choose_guess has always used:
 
-                    best_word = word
-                    best_expected_remaining = expected_remaining
-                    best_is_answer = is_answer
+            1. Higher entropy
+            2. Lower expected number of remaining answers
+            3. Prefer a word that is itself a possible answer
+        """
 
-                elif (
-                    abs(expected_remaining - best_expected_remaining) <= 1e-12
-                    and is_answer
-                    and not best_is_answer
-                ):
+        _, a_entropy, a_expected, a_is_answer = a
+        _, b_entropy, b_expected, b_is_answer = b
 
-                    best_word = word
-                    best_is_answer = True
+        if b_entropy > a_entropy + 1e-12:
+            return b
 
-        return best_word
+        if a_entropy > b_entropy + 1e-12:
+            return a
+
+        if b_expected < a_expected - 1e-12:
+            return b
+
+        if a_expected < b_expected - 1e-12:
+            return a
+
+        if b_is_answer and not a_is_answer:
+            return b
+
+        return a
 
     def get_feedback_pattern(self, guess, answer):
         """
@@ -241,12 +290,6 @@ class WordleEntropyBot:
             2 = green
 
         The two-pass procedure correctly handles repeated letters.
-
-        No caching here: with turn 1 hardcoded, the remaining turns
-        work over much smaller pools, so a plain computation ends
-        up faster overall than paying for a large, mostly-cold
-        dict cache (and avoids the memory blow-up an unbounded
-        guess x answer cache causes at this scale).
         """
 
         result = [0, 0, 0, 0, 0]
@@ -310,7 +353,8 @@ if __name__ == "__main__":
         )
 
         if guess is not None and bot.turns_used > 0:
-            entropy, _ = bot.get_guess_stats(guess)
+            pool_key = frozenset(bot.possible_answers) if bot.turns_used == 1 else None
+            entropy, _ = bot.get_guess_stats(guess, pool_key)
             print(
                 "Information entropy:",
                 round(entropy, 4),
