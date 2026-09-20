@@ -58,6 +58,12 @@ class WordleEntropyBot:
         # All legal guesses
         self.guesses = load_words("../data/guesses.txt")
 
+        # Make sure every possible answer is also available
+        # as a guess.
+        self.guesses = list(dict.fromkeys(
+            self.guesses + self.answers
+        ))
+
         # At the beginning, every answer is possible
         self.possible_answers = self.answers.copy()
 
@@ -152,11 +158,21 @@ class WordleEntropyBot:
         identical at the start of every game.
 
         Later turns:
-            Search every legal guess while the answer pool is
-            reasonably large. Once the pool becomes small, search
-            the remaining answers plus legal guesses. This preserves
-            the information-theoretic strategy while avoiding
-            unnecessary work.
+            Always search every legal guess. A small remaining
+            pool is not the same as a splittable one: a family
+            like batch/catch/hatch/latch/match/patch/watch all
+            look identical to each other no matter which one you
+            guess (guessing "batch" only ever says "yes" or "not
+            batch" -- every other member gives the same "not
+            batch" answer). The only way to actually separate
+            them is a probe word from OUTSIDE the family, which
+            means self.guesses has to stay in play even once the
+            pool is small -- restricting the search to just the
+            tied candidates at that point guarantees some of them
+            are unreachable before turns run out. Searching all
+            of self.guesses against a small pool is cheap (tens
+            of thousands of comparisons, not millions), so there's
+            no real cost to leaving it on.
 
         Tie-breaking:
             1. Higher entropy
@@ -175,13 +191,7 @@ class WordleEntropyBot:
         if self.turns_used == 0:
             return self.opening_guess
 
-        if len(self.possible_answers) <= 10:
-
-            candidate_guesses = self.possible_answers
-
-        else:
-
-            candidate_guesses = self.guesses
+        candidate_guesses = self.guesses
 
         best_word = None
         best_entropy = -1.0
